@@ -27,7 +27,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/utsname.h>
-#include <cjson/json.h>
+#include <json.h>
 #include <luna-service2/lunaservice.h>
 
 #include "main.h"

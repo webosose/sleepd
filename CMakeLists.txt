@@ -45,9 +45,9 @@ pkg_check_modules(LUNASERVICE2 REQUIRED luna-service2)
 include_directories(${LUNASERVICE2_INCLUDE_DIRS})
 webos_add_compiler_flags(ALL ${LUNASERVICE2_CFLAGS_OTHER})
 
-pkg_check_modules(CJSON REQUIRED cjson)
-include_directories(${CJSON_INCLUDE_DIRS})
-webos_add_compiler_flags(ALL ${CJSON_CFLAGS_OTHER})
+pkg_check_modules(JSON REQUIRED json-c)
+include_directories(${JSON_INCLUDE_DIRS})
+webos_add_compiler_flags(ALL ${JSON_CFLAGS_OTHER})
 
 pkg_check_modules(NYXLIB REQUIRED nyx)
 include_directories(${NYXLIB_INCLUDE_DIRS})
@@ -111,7 +111,7 @@ target_link_libraries(sleepd
                         ${LIBXML2_LDFLAGS}
                         ${SQLITE3_LDFLAGS}
                         ${LUNASERVICE2_LDFLAGS}
-                        ${CJSON_LDFLAGS}
+                        ${JSON_LDFLAGS}
                         ${POWERD_LDFLAGS}
                         ${NYXLIB_LDFLAGS}
                         ${PMLOGLIB_LDFLAGS}

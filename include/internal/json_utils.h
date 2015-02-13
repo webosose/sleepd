@@ -17,7 +17,8 @@
 #ifndef __JSON_UTILS_H__
 #define __JSON_UTILS_H__
 
-#include <cjson/json.h>
+#include <json.h>
+#include <stdbool.h>
 
 bool get_json_string(struct json_object *object, const char *key, char **value);
 bool get_json_int(struct json_object *object, const char *key, int *value);

@@ -23,7 +23,7 @@
 */
 
 #include <glib.h>
-#include <cjson/json.h>
+#include <json.h>
 #include <syslog.h>
 #include <string.h>
 #include <luna-service2/lunaservice.h>

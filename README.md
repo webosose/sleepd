@@ -34,7 +34,7 @@ _sleepd_:
 * glib-2.0 2.32.1
 * libxml2 2.7.2
 * make (any version)
-* openwebos/cjson 1.8.0
+* json-c 0.12
 * openwebos/cmake-modules-webos 1.0.0 RC4
 * openwebos/luna-service2 3.0.0
 * openwebos/nyx-lib 2.0.0

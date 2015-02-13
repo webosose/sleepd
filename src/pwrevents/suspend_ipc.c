@@ -23,7 +23,7 @@
 
 #include <syslog.h>
 #include <string.h>
-#include <cjson/json.h>
+#include <json.h>
 #include <luna-service2/lunaservice.h>
 
 #include "wait.h"

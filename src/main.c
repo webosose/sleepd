@@ -69,7 +69,7 @@
 #include <stdbool.h>
 #include <getopt.h>
 #include <stdlib.h>
-#include <cjson/json.h>
+#include <json.h>
 #include <luna-service2/lunaservice.h>
 
 #include "init.h"

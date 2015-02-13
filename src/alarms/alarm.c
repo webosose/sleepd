@@ -27,7 +27,7 @@
 #include <string.h>
 #include <luna-service2/lunaservice.h>
 
-#include <cjson/json.h>
+#include <json.h>
 
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
