@@ -20,9 +20,11 @@
 #include <json.h>
 #include <stdbool.h>
 
-bool get_json_string(struct json_object *object, const char *key, char **value);
+bool get_json_string(struct json_object *object, const char *key,
+                     const char **value);
 bool get_json_int(struct json_object *object, const char *key, int *value);
 bool get_json_boolean(struct json_object *object, const char *key, bool *value);
-bool get_json_object_as_string(struct json_object *object, const char *key, char **value);
+bool get_json_object_as_string(struct json_object *object, const char *key,
+                               const char **value);
 
 #endif

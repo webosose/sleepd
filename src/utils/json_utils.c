@@ -14,53 +14,72 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-#include <string.h>
+#include <string.h> // For definition of NULL
 #include "json_utils.h"
 
-bool get_json_string(struct json_object *object, const char *key, char **value)
+static struct json_object *get_typed_object(struct json_object *object,
+        const char *key, json_type desired_type)
 {
-    struct json_object *strObj = NULL;
-    strObj = json_object_object_get(object, key);
-    if(!strObj || json_object_get_type(strObj) != json_type_string)
-        return false;
+    struct json_object *obj = NULL;
+    bool result = (json_object_object_get_ex(object, key, &obj)) &&
+                  (json_object_get_type(obj) == desired_type);
+    return result ? obj : NULL;
+}
 
-    *value = json_object_get_string(strObj);
-    if(*value == NULL || !strlen(*value))
-        return false;
-    return true;
+bool get_json_string(struct json_object *object, const char *key,
+                     const char **value)
+{
+    bool result = false;
+    struct json_object *strObj = get_typed_object(object, key, json_type_string);
+
+    if (strObj)
+    {
+        *value = json_object_get_string(strObj);
+        result = *value && strlen(*value) != 0;
+    }
+
+    return result;
 }
 
 bool get_json_int(struct json_object *object, const char *key, int *value)
 {
-    struct json_object *intObj = NULL;
-    intObj = json_object_object_get(object, key);
-    if(!intObj || json_object_get_type(intObj) != json_type_int)
-        return false;
+    bool result = false;
+    struct json_object *intObj = get_typed_object(object, key, json_type_int);
 
-    *value = json_object_get_int(intObj);
-    return true;
+    if (intObj)
+    {
+        *value = json_object_get_int(intObj);
+        result = true;
+    }
+
+    return result;
 }
 
 bool get_json_boolean(struct json_object *object, const char *key, bool *value)
 {
-    struct json_object *boolObj = NULL;
-    boolObj = json_object_object_get(object, key);
-    if(!boolObj || json_object_get_type(boolObj) != json_type_boolean)
-        return false;
+    bool result = false;
+    struct json_object *boolObj = get_typed_object(object, key, json_type_boolean);
 
-    *value = json_object_get_boolean(boolObj);
-    return true;
+    if (boolObj)
+    {
+        *value = json_object_get_boolean(boolObj);
+        result = true;
+    }
+
+    return result;
 }
 
-bool get_json_object_as_string(struct json_object *object, const char *key, char **value)
+bool get_json_object_as_string(struct json_object *object, const char *key,
+                               const char **value)
 {
-    struct json_object *strObj = NULL;
-    strObj = json_object_object_get(object, key);
-    if(!strObj || json_object_get_type(strObj) != json_type_object)
-        return false;
+    struct json_object *strObj = get_typed_object(object, key, json_type_object);
+    bool result = false;
 
-    *value = json_object_get_string(strObj);
-    if(*value == NULL || !strlen(*value))
-        return false;
-    return true;
+    if (strObj)
+    {
+        *value = json_object_get_string(strObj);
+        result = *value && strlen(*value) != 0;
+    }
+
+    return result;
 }
