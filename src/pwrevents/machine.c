@@ -117,7 +117,7 @@ bool ChargerStatus(LSHandle *sh,
         }
     }
 
-    if (!is_error(object))
+    if (object)
     {
         json_object_put(object);
     }

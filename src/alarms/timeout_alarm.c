@@ -184,7 +184,7 @@ _timeout_response(LSHandle *sh, LSMessage *message, void *ctx)
 
     object = json_tokener_parse(LSMessageGetPayload(message));
 
-    if (is_error(object))
+    if (!object)
     {
         goto cleanup;
     }
@@ -207,7 +207,7 @@ _timeout_response(LSHandle *sh, LSMessage *message, void *ctx)
 
 cleanup:
 
-    if (!is_error(object))
+    if (object)
     {
         json_object_put(object);
     }
@@ -998,7 +998,7 @@ _alarm_timeout_set(LSHandle *sh, LSMessage *message, void *ctx)
 
     object = json_tokener_parse(LSMessageGetPayload(message));
 
-    if (is_error(object))
+    if (!object)
     {
         goto malformed_json;
     }
@@ -1290,7 +1290,7 @@ malformed_json:
     goto cleanup;
 cleanup:
 
-    if (!is_error(object))
+    if (object)
     {
         json_object_put(object);
     }
@@ -1325,7 +1325,7 @@ _alarm_timeout_clear(LSHandle *sh, LSMessage *message, void *ctx)
 
     object = json_tokener_parse(LSMessageGetPayload(message));
 
-    if (is_error(object))
+    if (!object)
     {
         goto malformed_json;
     }
@@ -1387,7 +1387,7 @@ malformed_json:
     goto cleanup;
 cleanup:
 
-    if (!is_error(object))
+    if (object)
     {
         json_object_put(object);
     }

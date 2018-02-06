@@ -164,7 +164,7 @@ alarmAdd(LSHandle *sh, LSMessage *message, void *ctx)
 
     object = json_tokener_parse(LSMessageGetPayload(message));
 
-    if (is_error(object))
+    if (!object)
     {
         goto malformed_json;
     }
@@ -272,7 +272,7 @@ malformed_json:
     goto cleanup;
 cleanup:
 
-    if (!is_error(object))
+    if (object)
     {
         json_object_put(object);
     }
@@ -343,7 +343,7 @@ alarmAddCalendar(LSHandle *sh, LSMessage *message, void *ctx)
 
     object = json_tokener_parse(LSMessageGetPayload(message));
 
-    if (is_error(object))
+    if (!object)
     {
         goto malformed_json;
     }
@@ -486,7 +486,7 @@ malformed_json:
     goto cleanup;
 cleanup:
 
-    if (!is_error(object))
+    if (object)
     {
         json_object_put(object);
     }
@@ -529,7 +529,7 @@ alarmQuery(LSHandle *sh, LSMessage *message, void *ctx)
 
     object = json_tokener_parse(LSMessageGetPayload(message));
 
-    if (is_error(object))
+    if (!object)
     {
         goto malformed_json;
     }
@@ -607,7 +607,7 @@ cleanup:
         g_string_free(buf, TRUE);
     }
 
-    if (!is_error(object))
+    if (object)
     {
         json_object_put(object);
     }
@@ -642,7 +642,7 @@ alarmRemove(LSHandle *sh, LSMessage *message, void *ctx)
     const char *payload = LSMessageGetPayload(message);
     struct json_object *object = json_tokener_parse(payload);
 
-    if (is_error(object))
+    if (!object)
     {
         goto malformed_json;
     }
@@ -699,7 +699,7 @@ malformed_json:
     goto cleanup;
 cleanup:
 
-    if (!is_error(object))
+    if (object)
     {
         json_object_put(object);
     }

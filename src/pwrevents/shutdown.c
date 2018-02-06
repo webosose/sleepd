@@ -902,7 +902,7 @@ shutdownApplicationsAck(LSHandle *sh, LSMessage *message,
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
 
-    if (is_error(object))
+    if (!object)
     {
         LSMessageReplyErrorBadJSON(sh, message);
         goto cleanup;
@@ -929,7 +929,7 @@ shutdownApplicationsAck(LSHandle *sh, LSMessage *message,
     LSMessageReplySuccess(sh, message);
 cleanup:
 
-    if (!is_error(object))
+    if (object)
     {
         json_object_put(object);
     }
@@ -955,7 +955,7 @@ shutdownServicesAck(LSHandle *sh, LSMessage *message,
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
 
-    if (is_error(object))
+    if (!object)
     {
         LSMessageReplyErrorBadJSON(sh, message);
         goto cleanup;
@@ -983,7 +983,7 @@ shutdownServicesAck(LSHandle *sh, LSMessage *message,
     LSMessageReplySuccess(sh, message);
 cleanup:
 
-    if (!is_error(object))
+    if (object)
     {
         json_object_put(object);
     }
@@ -1008,7 +1008,7 @@ shutdownApplicationsRegister(LSHandle *sh, LSMessage *message,
     struct json_object *object =
         json_tokener_parse(LSMessageGetPayload(message));
 
-    if (is_error(object))
+    if (!object)
     {
         goto end;
     }
@@ -1042,7 +1042,7 @@ shutdownApplicationsRegister(LSHandle *sh, LSMessage *message,
     send_reply(sh, message, "{\"clientId\":\"%s\", \"returnValue\": true}", clientId);
 
 cleanup:
-    if (!is_error(object))
+    if (object)
     {
         json_object_put(object);
     }
@@ -1069,7 +1069,7 @@ shutdownServicesRegister(LSHandle *sh, LSMessage *message,
     struct json_object_iterator it;
     struct json_object_iterator itEnd;
 
-    if (is_error(object))
+    if (!object)
     {
         goto end;
     }
@@ -1115,7 +1115,7 @@ shutdownServicesRegister(LSHandle *sh, LSMessage *message,
     send_reply(sh, message, "{\"clientId\":\"%s\", \"returnValue\": true}", clientId);
 
 cleanup:
-    if (!is_error(object))
+    if (object)
     {
         json_object_put(object);
     }
@@ -1138,7 +1138,7 @@ machineOff(LSHandle *sh, LSMessage *message,
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
 
-    if (is_error(object))
+    if (!object)
     {
         LSMessageReplyErrorBadJSON(sh, message);
         goto cleanup;
@@ -1157,7 +1157,7 @@ machineOff(LSHandle *sh, LSMessage *message,
 
 cleanup:
 
-    if (!is_error(object))
+    if (object)
     {
         json_object_put(object);
     }
@@ -1180,7 +1180,7 @@ machineReboot(LSHandle *sh, LSMessage *message,
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
 
-    if (is_error(object))
+    if (!object)
     {
         LSMessageReplyErrorBadJSON(sh, message);
         goto cleanup;
@@ -1198,7 +1198,7 @@ machineReboot(LSHandle *sh, LSMessage *message,
 
 cleanup:
 
-    if (!is_error(object))
+    if (object)
     {
         json_object_put(object);
     }
