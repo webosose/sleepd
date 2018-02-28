@@ -1,0 +1,125 @@
+# Copyright (c) 2011-2018 LG Electronics, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+#
+# sleepd/CMakeLists.txt
+#
+
+
+cmake_minimum_required(VERSION 2.8.7)
+
+project(sleepd C)
+
+include(webOS/webOS)
+webos_modules_init(1 0 0 QUALIFIER RC2)
+webos_component(2 0 0)
+
+include(FindPkgConfig)
+
+pkg_check_modules(GLIB2 REQUIRED glib-2.0)
+include_directories(${GLIB2_INCLUDE_DIRS})
+webos_add_compiler_flags(ALL ${GLIB2_CFLAGS_OTHER})
+
+pkg_check_modules(LIBXML2 REQUIRED libxml-2.0)
+include_directories(${LIBXML2_INCLUDE_DIRS})
+webos_add_compiler_flags(ALL ${LIBXML2_CFLAGS_OTHER})
+
+pkg_check_modules(SQLITE3 REQUIRED sqlite3)
+include_directories(${SQLITE3_INCLUDE_DIRS})
+webos_add_compiler_flags(ALL ${SQLITE3_CFLAGS_OTHER})
+
+pkg_check_modules(LUNASERVICE2 REQUIRED luna-service2)
+include_directories(${LUNASERVICE2_INCLUDE_DIRS})
+webos_add_compiler_flags(ALL ${LUNASERVICE2_CFLAGS_OTHER})
+
+pkg_check_modules(CJSON REQUIRED cjson)
+include_directories(${CJSON_INCLUDE_DIRS})
+webos_add_compiler_flags(ALL ${CJSON_CFLAGS_OTHER})
+
+pkg_check_modules(NYXLIB REQUIRED nyx)
+include_directories(${NYXLIB_INCLUDE_DIRS})
+webos_add_compiler_flags(ALL ${NYXLIB_CFLAGS_OTHER})
+
+pkg_check_modules(PMLOGLIB REQUIRED PmLogLib)
+include_directories(${PMLOGLIB_INCLUDE_DIRS})
+webos_add_compiler_flags(ALL ${PMLOGLIB_CFLAGS_OTHER})
+
+# Nyxlib version 3.0.0 introduced an API break in nyx_system_reboot
+string(REPLACE "." ";" NYXV ${NYXLIB_VERSION})
+string(REPLACE "~" ";" NYXV "${NYXV}")
+list(GET NYXV 0 NYXLIB_MAJOR)
+if(${NYXLIB_MAJOR} GREATER 2)
+	webos_add_compiler_flags(ALL -DREBOOT_TAKES_REASON)
+endif()
+unset(NYXV)
+unset(NYXLIB_MAJOR)
+
+webos_add_compiler_flags(ALL -Wall)
+webos_add_compiler_flags(ALL -Werror=implicit-function-declaration)
+
+# Allow developer to compile with -Werror, without potentially breaking a build
+set(WEBOS_USE_WERROR FALSE CACHE BOOL "Set to TRUE to enable -Werror")
+if(WEBOS_USE_WERROR)
+    # treat most warnings as errors
+	webos_add_compiler_flags(ALL
+	                         -Werror
+	                         -Wno-error=format
+	                         -Wno-error=deprecated-declarations
+	                         -Wno-error=unused-function)
+endif()
+
+# we use gmtime_r which is not part of C99
+webos_add_compiler_flags(ALL --std=gnu99)
+
+webos_add_linker_options(ALL --no-undefined)
+
+if(UNMANAGED_SUSPEND)
+    add_definitions(-DENABLE_UNMANAGED_SUSPEND)
+endif()
+
+set(RTC_WATCHDOG FALSE CACHE BOOL "Set to TRUE to support RTC watchdog")
+
+if(NOT RTC_WATCHDOG)
+    add_definitions(-DWITHOUT_RTC_WATCHDOG)
+endif()
+
+add_definitions(-DPMLOG_TRACES_ENABLED -DPMLOG_TRACE_COMPONENT="sleepd")
+
+# Build the sleepd executable
+include_directories(include/internal)
+
+file(GLOB SOURCE_FILES src/alarms/*.c src/pwrevents/*.c src/utils/*.c src/*.c)
+
+webos_configure_header_files(src)
+
+add_executable(sleepd ${SOURCE_FILES})
+target_link_libraries(sleepd
+                        ${GLIB2_LDFLAGS}
+                        ${LIBXML2_LDFLAGS}
+                        ${SQLITE3_LDFLAGS}
+                        ${LUNASERVICE2_LDFLAGS}
+                        ${CJSON_LDFLAGS}
+                        ${POWERD_LDFLAGS}
+                        ${NYXLIB_LDFLAGS}
+                        ${PMLOGLIB_LDFLAGS}
+                        rt
+                        pthread)
+
+webos_build_daemon()
+webos_build_system_bus_files()
+webos_config_build_doxygen(doc Doxyfile)
+
+install(FILES files/conf/sleepd.conf DESTINATION ${WEBOS_INSTALL_DEFAULTCONFDIR})
