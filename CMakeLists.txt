@@ -112,7 +112,6 @@ target_link_libraries(sleepd
                         ${SQLITE3_LDFLAGS}
                         ${LUNASERVICE2_LDFLAGS}
                         ${JSON_LDFLAGS}
-                        ${POWERD_LDFLAGS}
                         ${NYXLIB_LDFLAGS}
                         ${PMLOGLIB_LDFLAGS}
                         rt

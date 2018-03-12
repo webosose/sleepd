@@ -29,16 +29,15 @@ How to Build on Linux
 Below are the tools and libraries (and their minimum versions) required to build
 _sleepd_:
 
-* cmake (version required by openwebos/cmake-modules-webos)
+* cmake (version required by webosose/cmake-modules-webos)
 * gcc 4.6.3
 * glib-2.0 2.32.1
 * libxml2 2.7.2
 * make (any version)
 * json-c 0.12
-* openwebos/cmake-modules-webos 1.0.0 RC4
-* openwebos/luna-service2 3.0.0
-* openwebos/nyx-lib 2.0.0
-* openwebos/powerd 4.0.0
+* webosose/cmake-modules-webos 1.0.0 RC4
+* webosose/luna-service2 3.0.0
+* webosose/nyx-lib 2.0.0
 * pkg-config 0.26
 * sqlite3 3.6.20
 
@@ -57,11 +56,11 @@ The directory under which the files are installed defaults to `/usr/local/webos`
 You can install them elsewhere by supplying a value for `WEBOS_INSTALL_ROOT`
 when invoking `cmake`. For example:
 
-    $ cmake -D WEBOS_INSTALL_ROOT:PATH=$HOME/projects/openwebos ..
+    $ cmake -D WEBOS_INSTALL_ROOT:PATH=$HOME/projects/webosose ..
     $ make
     $ make install
 
-will install the files in subdirectories of `$HOME/projects/openwebos`.
+will install the files in subdirectories of `$HOME/projects/webosose`.
 
 Specifying `WEBOS_INSTALL_ROOT` also causes `pkg-config` to look in that tree
 first before searching the standard locations. You can specify additional
