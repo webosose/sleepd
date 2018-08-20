@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2018 LG Electronics, Inc.
+// Copyright (c) 2011-2019 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -87,7 +87,7 @@ typedef enum
     AlarmTimeoutCalendar,
 } AlarmTimeoutType;
 
-static LSPalmService *psh = NULL, *pwebos_sh = NULL;
+static LSHandle *lsh = NULL, *webos_sh = NULL;
 static sqlite3 *timeout_db = NULL;
 static GTimerSource *sTimerCheck = NULL;
 static time_t invalid_time = (time_t) - 1;
@@ -259,16 +259,6 @@ _timeout_fire(_AlarmTimeout *timeout)
 
     LSCallOneReply(sh, "palm://com.webos.service.power/suspend/activityStart",
                    payload->str, NULL, NULL, NULL, NULL);
-
-
-    if (timeout->public_bus)
-    {
-        sh = LSPalmServiceGetPublicConnection(pwebos_sh);
-    }
-    else
-    {
-        sh = LSPalmServiceGetPrivateConnection(pwebos_sh);
-    }
 
     // Call Luna-service bus with the uri/params.
     retVal = LSCallFromApplicationOneReply(sh,
@@ -1198,7 +1188,6 @@ _alarm_timeout_set(LSHandle *sh, LSMessage *message, void *ctx)
         goto invalid_json;
     }
 
-    public_bus = LSMessageIsPublic(pwebos_sh, message);
     calendar = (timeout_type == AlarmTimeoutCalendar);
 
     bool kept_existing = false;
@@ -1332,12 +1321,10 @@ _alarm_timeout_clear(LSHandle *sh, LSMessage *message, void *ctx)
 
     app_instance_id = LSMessageGetApplicationID(message);
 
-        if(!get_json_string(object, "key", &key))
-        {
+    if(!get_json_string(object, "key", &key))
+    {
         goto invalid_json;
-        }
-
-    public_bus = LSMessageIsPublic(pwebos_sh, message);
+    }
 
     if (!app_instance_id)
     {
@@ -1469,15 +1456,14 @@ _alarms_timeout_init(void)
 
     /* Set up luna service */
 
-    psh = GetPalmService();
+    lsh = GetLunaServiceHandle();
 
     LSError lserror;
     LSErrorInit(&lserror);
 
     // Registering as "/timeout" category with com.palm.sleep (to be deprecated soon)
-    if (!LSPalmServiceRegisterCategory(psh,
-                                       "/timeout", timeout_methods /*public*/, NULL /*private*/, NULL, NULL,
-                                       &lserror))
+    if (!LSRegisterCategory(lsh, "/timeout", timeout_methods, NULL, NULL,
+                            &lserror))
     {
         SLEEPDLOG_ERROR(MSGID_CATEGORY_REG_FAIL, 1, PMLOGKS(ERRTEXT, lserror.message),
                         "could not register category");
@@ -1485,7 +1471,7 @@ _alarms_timeout_init(void)
         goto error;
     }
 
-    retVal = LSCall(LSPalmServiceGetPrivateConnection(psh),
+    retVal = LSCall(lsh,
                     "palm://com.palm.bus/signal/addmatch",
                     "{\"category\":\"/suspend\",\"method\":\"resume\"}",
                     _resume_callback, NULL, NULL, &lserror);
@@ -1501,7 +1487,7 @@ _alarms_timeout_init(void)
     /*
      * Register ourselves as the new com.webos.service.alarm service.
      */
-    retVal = LSRegisterPalmService("com.webos.service.alarm", &pwebos_sh, &lserror);
+    retVal = LSRegister("com.webos.service.alarm", &webos_sh, &lserror);
 
     if (retVal)
     {
@@ -1509,14 +1495,15 @@ _alarms_timeout_init(void)
         /*
          * Attach our main loop to the service so we can process IPC messages addressed to us.
          */
-        retVal = LSGmainAttachPalmService(pwebos_sh, GetMainLoop(), &lserror);
+        retVal = LSGmainAttach(webos_sh, GetMainLoop(), &lserror);
+
 
         if (retVal)
         {
 
-            if (!LSPalmServiceRegisterCategory(pwebos_sh,
-                                               "/", timeout_methods /*public*/, NULL /*private*/, NULL, NULL,
-                                               &lserror))
+            if (!LSRegisterCategory(webos_sh,
+                                    "/", timeout_methods, NULL, NULL,
+                                    &lserror))
             {
                 SLEEPDLOG_ERROR(MSGID_CATEGORY_REG_FAIL, 1, PMLOGKS(ERRTEXT, lserror.message),
                                 "could not register category");

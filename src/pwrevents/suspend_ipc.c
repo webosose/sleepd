@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2018 LG Electronics, Inc.
+// Copyright (c) 2011-2019 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -806,15 +806,12 @@ LSMethod com_palm_suspend_methods[] =
     { "identify", identifyCallback },
     { "clientCancelByName", clientCancelByName },
 
+    { "activityStart", activityStartCallback },
+    { "activityEnd", activityEndCallback },
+
     { "TESTSuspend", TESTSuspendCallback },
 
     { },
-};
-
-LSMethod com_palm_suspend_public_methods[] =
-{
-    { "activityStart", activityStartCallback },
-    { "activityEnd", activityEndCallback },
 };
 
 LSSignal com_palm_suspend_signals[] =
@@ -836,8 +833,8 @@ int com_palm_suspend_lunabus_init(void)
     LSErrorInit(&lserror);
 
     // Registering "/com/palm/power" category with com.palm.sleep service (to be deprecated)
-    if (!LSPalmServiceRegisterCategory(GetPalmService(), "/com/palm/power",
-                                       com_palm_suspend_public_methods, com_palm_suspend_methods,
+    if (!LSRegisterCategory(GetLunaServiceHandle(), "/com/palm/power",
+                                       com_palm_suspend_methods,
                                        com_palm_suspend_signals,
                                        NULL, &lserror))
     {
@@ -845,8 +842,8 @@ int com_palm_suspend_lunabus_init(void)
     }
 
     // Registering "suspend" category with the com.webos.service.power service.
-    if (!LSPalmServiceRegisterCategory(GetWebosService(), "/suspend",
-                                       com_palm_suspend_public_methods, com_palm_suspend_methods,
+    if (!LSRegisterCategory(GetWebosLunaServiceHandle(), "/suspend",
+                                       com_palm_suspend_methods,
                                        com_palm_suspend_signals,
                                        NULL, &lserror))
     {

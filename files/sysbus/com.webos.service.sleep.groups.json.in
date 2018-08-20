@@ -1,0 +1,10 @@
+{
+    "sleep.release": {
+        "description": "Common sleep service APIs",
+        "public": true
+    },
+    "sleep.internal": {
+        "description": "Internal sleep service APIs",
+        "public": false
+    }
+}

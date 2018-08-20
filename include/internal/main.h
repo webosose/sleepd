@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2018 LG Electronics, Inc.
+// Copyright (c) 2011-2019 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,14 +31,10 @@ GMainContext *GetMainLoopContext(void);
 
 LSHandle *GetLunaServiceHandle(void);
 
-LSPalmService *GetPalmService(void);
-
 nyx_device_handle_t GetNyxSystemDevice(void);
 
 GMainLoop *GetMainLoop(void);
 
 LSHandle *GetWebosLunaServiceHandle(void);
-
-LSPalmService *GetWebosService(void);
 
 #endif

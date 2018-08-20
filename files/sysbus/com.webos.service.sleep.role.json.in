@@ -1,0 +1,23 @@
+{
+    "exeName":"@WEBOS_INSTALL_SBINDIR@/sleepd",
+    "type": "privileged",
+    "allowedNames": [
+        "com.palm.sleep",
+        "com.webos.service.alarm",
+        "com.webos.service.power"
+    ],
+    "permissions": [
+        {
+          "service":"com.palm.sleep",
+            "outbound":["*"]
+        },
+        {
+            "service":"com.webos.service.alarm",
+            "outbound":["*"]
+        },
+        {
+            "service":"com.webos.service.power",
+            "outbound":["*"]
+        }
+    ]
+}

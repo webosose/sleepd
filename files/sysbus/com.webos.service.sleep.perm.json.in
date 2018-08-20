@@ -1,0 +1,11 @@
+{
+    "com.palm.sleep": [
+        "system"
+    ],
+    "com.webos.service.alarm": [
+        "system"
+    ],
+    "com.webos.service.power": [
+        "system"
+    ]
+}

@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2018 LG Electronics, Inc.
+// Copyright (c) 2011-2019 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -78,8 +78,7 @@
 
 
 static GMainLoop *mainloop = NULL;
-static LSHandle *private_sh = NULL, *private_webos_sh = NULL;
-static LSPalmService *psh = NULL, *pwebos_sh = NULL;
+static LSHandle *lsh = NULL, *webos_sh = NULL;
 
 bool ChargerConnected(LSHandle *sh, LSMessage *message,
                       void *user_data); // defined in machine.c
@@ -107,13 +106,7 @@ GetMainLoopContext(void)
 LSHandle *
 GetLunaServiceHandle(void)
 {
-    return private_sh;
-}
-
-LSPalmService *
-GetPalmService(void)
-{
-    return psh;
+    return lsh;
 }
 
 GMainLoop *
@@ -125,13 +118,7 @@ GetMainLoop(void)
 LSHandle *
 GetWebosLunaServiceHandle(void)
 {
-    return private_webos_sh;
-}
-
-LSPalmService *
-GetWebosService(void)
-{
-    return pwebos_sh;
+    return webos_sh;
 }
 
 static nyx_device_handle_t nyxSystem = NULL;
@@ -156,7 +143,7 @@ static gboolean register_batteryd_status_cb(LSHandle *sh, const char *service,
          * to the plug/unplug state of any chargers which may be attached to our
          * device.
          */
-        retVal = LSCall(private_sh, "luna://com.palm.lunabus/signal/addmatch",
+        retVal = LSCall(lsh, "luna://com.palm.lunabus/signal/addmatch",
                         "{\"category\":\"/\","
                         "\"method\":\"chargerConnected\"}", ChargerStatus, NULL, NULL, &lserror);
 
@@ -165,7 +152,7 @@ static gboolean register_batteryd_status_cb(LSHandle *sh, const char *service,
              * Now that we've got something listening for charger status changes,
              * request the current state of the charger from com.webos.service.battery
              */
-            retVal = LSCall(private_sh,
+            retVal = LSCall(lsh,
                             "luna://com.webos.service.battery/chargerStatusQuery",
                             "{}", ChargerStatus, NULL, NULL, &lserror);
 
@@ -227,16 +214,12 @@ main(int argc, char **argv)
     /*
      * Register ourselves as the "com.webos.service.power" service.
      */
-    retVal = LSRegisterPalmService("com.webos.service.power", &pwebos_sh, &lserror);
+    retVal = LSRegister("com.webos.service.power", &webos_sh, &lserror);
 
     if (retVal)
     {
-        retVal = LSGmainAttachPalmService(pwebos_sh, mainloop, &lserror);
+        retVal = LSGmainAttach(webos_sh, mainloop, &lserror);
 
-        if (retVal)
-        {
-            private_webos_sh = LSPalmServiceGetPrivateConnection(pwebos_sh);
-        }
     }
     else
     {
@@ -249,16 +232,12 @@ main(int argc, char **argv)
     /*
      * Register ourselves as the original "com.palm.sleep" service ( to be deprecated soon)
      */
-    retVal = LSRegisterPalmService("com.palm.sleep", &psh, &lserror);
+    retVal = LSRegister("com.palm.sleep", &lsh, &lserror);
 
     if (retVal)
     {
-        retVal = LSGmainAttachPalmService(psh, mainloop, &lserror);
+        retVal = LSGmainAttach(lsh, mainloop, &lserror);
 
-        if (retVal)
-        {
-            private_sh = LSPalmServiceGetPrivateConnection(psh);
-        }
     }
     else
     {
@@ -268,7 +247,7 @@ main(int argc, char **argv)
         goto error;
     }
 
-    if (LSRegisterServerStatusEx(private_sh, "com.webos.service.battery",
+    if (LSRegisterServerStatusEx(lsh, "com.webos.service.battery",
                                  (LSServerStatusFunc)register_batteryd_status_cb, NULL, NULL, &lserror) == false)
     {
         LSErrorFree(&lserror);
