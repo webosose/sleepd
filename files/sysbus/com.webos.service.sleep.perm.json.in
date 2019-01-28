@@ -1,11 +1,11 @@
 {
     "com.palm.sleep": [
-        "system"
+        "system","activities.manage"
     ],
     "com.webos.service.alarm": [
-        "system"
+        "system","activities.manage"
     ],
     "com.webos.service.power": [
-        "system"
+        "system","activities.manage"
     ]
 }
