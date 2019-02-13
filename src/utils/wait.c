@@ -1,4 +1,4 @@
-// Copyright (c) 2007-2018 LG Electronics, Inc.
+// Copyright (c) 2007-2019 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -111,6 +111,10 @@ WaitObjectWaitTimeSpec(WaitObj *obj, struct timespec *delta)
 
     if (-1 == delta->tv_sec) // wait forever
     {
+        if(WaitObjectIsLocked(obj) == false){
+            g_error("%s obj->mutex is unlocked\n", __FUNCTION__);
+            return ret;
+        }
         ret = pthread_cond_wait(&obj->cond, &obj->mutex);
         return (ret != 0);
     }
@@ -143,6 +147,11 @@ WaitObjectWaitAbsTime(WaitObj *obj, struct timespec *abstime)
     // wait object must be locked before use.
     g_assert(WaitObjectIsLocked(obj));
     g_assert(abstime != NULL);
+
+    if(WaitObjectIsLocked(obj) == false){
+        g_error("%s obj->mutex is unlocked\n", __FUNCTION__);
+        return -1;
+    }
 
     int ret = pthread_cond_timedwait(&obj->cond, &obj->mutex, abstime);
 
