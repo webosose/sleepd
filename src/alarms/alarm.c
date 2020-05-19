@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2018 LG Electronics, Inc.
+// Copyright (c) 2011-2020 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -804,6 +804,7 @@ alarm_read_db(void)
 
     if (!cur)
     {
+        xmlFreeDoc(db);
         return;
     }
 
@@ -856,7 +857,10 @@ alarm_read_db(void)
             }
 
 clean_round:
+            xmlFree(id);
+            xmlFree(key);
             xmlFree(expiry);
+            xmlFree(calendar);
             xmlFree(service);
             xmlFree(app);
         }
