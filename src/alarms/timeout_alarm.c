@@ -42,7 +42,7 @@
 #include "reference_time.h"
 
 #include "timeout_alarm.h"
-#include "config.h"
+#include "sleepd_config.h"
 #include "init.h"
 #include "timesaver.h"
 

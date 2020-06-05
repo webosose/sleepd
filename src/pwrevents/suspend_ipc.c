@@ -36,7 +36,7 @@
 #include "activity.h"
 #include "logging.h"
 #include "lunaservice_utils.h"
-#include "config.h"
+#include "sleepd_config.h"
 #include "json_utils.h"
 
 #define LOG_DOMAIN "PWREVENT-SUSPEND: "

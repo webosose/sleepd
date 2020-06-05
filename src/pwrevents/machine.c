@@ -38,7 +38,7 @@
 #include "sleepd_debug.h"
 #include "logging.h"
 #include "suspend.h"
-#include "config.h"
+#include "sleepd_config.h"
 
 /**
  * Holds the current state of whether or not we're being supplied with power from a charger of any sort.

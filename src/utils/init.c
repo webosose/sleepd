@@ -19,7 +19,7 @@
 #include <string.h>
 
 #include "init.h"
-#include "config.h"
+#include "sleepd_config.h"
 #include "machine.h"
 #include "sleepd_debug.h"
 #include "logging.h"

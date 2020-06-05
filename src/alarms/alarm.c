@@ -37,7 +37,7 @@
 
 #include "main.h"
 #include "logging.h"
-#include "config.h"
+#include "sleepd_config.h"
 #include "timeout_alarm.h"
 #include "reference_time.h"
 #include "timesaver.h"

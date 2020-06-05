@@ -25,7 +25,7 @@
 #include <fcntl.h>
 #include <string.h>
 
-#include "config.h"
+#include "sleepd_config.h"
 #include "logging.h"
 #include "main.h"
 #include <ctype.h>

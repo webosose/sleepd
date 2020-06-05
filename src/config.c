@@ -34,7 +34,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "config.h"
+#include "sleepd_config.h"
 #include "init.h"
 #include "defines.h"
 #include "logging.h"
