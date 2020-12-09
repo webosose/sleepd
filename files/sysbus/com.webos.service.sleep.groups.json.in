@@ -1,10 +1,5 @@
 {
-    "sleep.release": {
-        "description": "Common sleep service APIs",
-        "public": true
-    },
-    "sleep.internal": {
-        "description": "Internal sleep service APIs",
-        "public": false
-    }
+"allowedNames": [ "com.palm.sleep", "com.webos.service.alarm", "com.webos.service.power"],
+"sleep.operation": ["oem"],
+"sleep.management": ["oem"]
 }
