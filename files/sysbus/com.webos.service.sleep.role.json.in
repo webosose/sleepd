@@ -6,15 +6,15 @@
 "permissions": [
 {
 "service":"com.palm.sleep",
-"outbound":["com.palm.sleep", "com.webos.service.power","com.webos.service.alarm"]
+"outbound":["*"]
 },
 {
 "service":"com.webos.service.alarm",
-"outbound":["com.palm.sleep", "com.webos.service.power", "com.webos.service.alarm"]
+"outbound":["*"]
 },
 {
 "service":"com.webos.service.power",
-"outbound":["com.palm.sleep", "com.webos.service.power","com.webos.service.alarm"]
+"outbound":["*"]
 }
 ]
 }
