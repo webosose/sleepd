@@ -1,11 +1,23 @@
 {
     "com.palm.sleep": [
-        "system","activities.manage"
+        "activity.query",
+        "activity.operation",
+        "activity.wakeup",
+        "sleep.operation",
+        "sleep.management"
     ],
     "com.webos.service.alarm": [
-        "system","activities.manage"
+        "activity.query",
+        "activity.operation",
+        "activity.wakeup",
+        "sleep.operation",
+        "sleep.management"
     ],
     "com.webos.service.power": [
-        "system","activities.manage"
+        "activity.query",
+        "activity.operation",
+        "activity.wakeup",
+        "sleep.operation",
+        "sleep.management"
     ]
 }
