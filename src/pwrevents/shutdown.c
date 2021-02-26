@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2018 LG Electronics, Inc.
+// Copyright (c) 2011-2021 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -901,14 +901,13 @@ shutdownApplicationsAck(LSHandle *sh, LSMessage *message,
 {
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
+    char *clientId = NULL;
 
     if (!object)
     {
         LSMessageReplyErrorBadJSON(sh, message);
         goto cleanup;
     }
-
-    char *clientId = NULL;
 
     if(!get_json_string(object, "clientId", &clientId))
     {
@@ -954,13 +953,13 @@ shutdownServicesAck(LSHandle *sh, LSMessage *message,
 {
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
+    char *clientId = NULL;
 
     if (!object)
     {
         LSMessageReplyErrorBadJSON(sh, message);
         goto cleanup;
     }
-    char *clientId = NULL;
 
     if(!get_json_string(object, "clientId", &clientId))
     {
@@ -1008,13 +1007,15 @@ shutdownApplicationsRegister(LSHandle *sh, LSMessage *message,
     struct json_object *object =
         json_tokener_parse(LSMessageGetPayload(message));
 
+    const char *clientId = NULL;
+    char *clientName = NULL;
+
     if (!object)
     {
         goto end;
     }
 
-    const char *clientId = LSMessageGetUniqueToken(message);
-    char *clientName = NULL;
+    clientId = LSMessageGetUniqueToken(message);
 
     if(!get_json_string(object, "clientName", &clientName))
     {
@@ -1069,6 +1070,9 @@ shutdownServicesRegister(LSHandle *sh, LSMessage *message,
     struct json_object_iterator it;
     struct json_object_iterator itEnd;
 
+    const char *clientId = NULL;
+    char *clientName = NULL;
+
     if (!object)
     {
         goto end;
@@ -1086,8 +1090,7 @@ shutdownServicesRegister(LSHandle *sh, LSMessage *message,
         }
     }
 
-    const char *clientId = LSMessageGetUniqueToken(message);
-    char *clientName = NULL;
+    clientId = LSMessageGetUniqueToken(message);
 
     if(!get_json_string(object, "clientName", &clientName))
     {
@@ -1137,14 +1140,13 @@ machineOff(LSHandle *sh, LSMessage *message,
 {
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
+    char *reason = NULL;
 
     if (!object)
     {
         LSMessageReplyErrorBadJSON(sh, message);
         goto cleanup;
     }
-
-    char *reason = NULL;
 
     if(!get_json_string(object, "reason", &reason))
     {
@@ -1179,13 +1181,13 @@ machineReboot(LSHandle *sh, LSMessage *message,
 {
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
+    char *reason = NULL;
 
     if (!object)
     {
         LSMessageReplyErrorBadJSON(sh, message);
         goto cleanup;
     }
-    char *reason = NULL;
 
     if(!get_json_string(object, "reason", &reason))
     {

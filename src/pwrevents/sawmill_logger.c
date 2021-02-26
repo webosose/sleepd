@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2018 LG Electronics, Inc.
+// Copyright (c) 2011-2021 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -52,6 +52,8 @@ static guint sTimerEventSource = 0;
 
 #define NS_PER_MS 1000000
 #define MS_PER_S 1000
+#define UPPER_CLAMP(x, high) (((x) > (high)) ? (high) : (x))
+
 long int
 time_to_ms(struct timespec t)
 {
@@ -90,7 +92,7 @@ sawmill_logger_record_sleep(struct timespec time_awake)
     sIsAwake = false;
 
     // calculate the amnt of time left to fire
-    sMSUntilPrint = CLAMP(PRINT_INTERVAL_MS - (time_now_ms() - sTimeOnPrint), 0,
+    sMSUntilPrint = UPPER_CLAMP(PRINT_INTERVAL_MS - (time_now_ms() - sTimeOnPrint),
                           PRINT_INTERVAL_MS);
 }
 
@@ -129,7 +131,7 @@ sawmill_logger_record_wake(struct timespec time_asleep)
     //TODO: use g_timer_source_set_interval(GTimerSource *tsource, guint interval_ms, gboolean from_poll)
     g_source_remove(sTimerEventSource);
     sTimerEventSource = g_timeout_add_full(G_PRIORITY_DEFAULT,
-                                           CLAMP(sMSUntilPrint - ms_asleep, 0, PRINT_INTERVAL_MS), sawmill_logger_update,
+                                           UPPER_CLAMP(sMSUntilPrint - ms_asleep, PRINT_INTERVAL_MS), sawmill_logger_update,
                                            GINT_TO_POINTER(FALSE), NULL);
 }
 

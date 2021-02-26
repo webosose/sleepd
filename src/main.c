@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2019 LG Electronics, Inc.
+// Copyright (c) 2011-2021 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -194,7 +194,7 @@ int
 main(int argc, char **argv)
 {
     bool retVal;
-
+    int ret = -1;
     /*
      * Register a function to be able to gracefully handle termination signals
      * from the OS or other processes.
@@ -257,7 +257,7 @@ main(int argc, char **argv)
     /*
      * Connect to Nyx so we can use it later.
      */
-    int ret = nyx_device_open(NYX_DEVICE_SYSTEM, "Main", &nyxSystem);
+    ret = nyx_device_open(NYX_DEVICE_SYSTEM, "Main", &nyxSystem);
 
     if (ret != NYX_ERROR_NONE)
     {

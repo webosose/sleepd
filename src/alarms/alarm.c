@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2020 LG Electronics, Inc.
+// Copyright (c) 2011-2021 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -162,6 +162,9 @@ alarmAdd(LSHandle *sh, LSMessage *message, void *ctx)
     LSErrorInit(&lserror);
     time_t rtctime = 0;
 
+    struct json_object *subscribe_json = NULL;
+    GString *reply = NULL;
+
     object = json_tokener_parse(LSMessageGetPayload(message));
 
     if (!object)
@@ -197,8 +200,7 @@ alarmAdd(LSHandle *sh, LSMessage *message, void *ctx)
 
     SLEEPDLOG_DEBUG("alarmAdd(): (%s %s %s) in %s (rtc %ld)", serviceName,
                     applicationName, key, rel_time, rtctime);
-    struct json_object *subscribe_json =
-        json_object_object_get(object, "subscribe");
+    subscribe_json = json_object_object_get(object, "subscribe");
 
     subscribe = json_object_get_boolean(subscribe_json);
 
@@ -244,7 +246,7 @@ alarmAdd(LSHandle *sh, LSMessage *message, void *ctx)
     /*****************/
 
     /* Send alarm id of sucessful alarm add. */
-    GString *reply = g_string_sized_new(512);
+    reply = g_string_sized_new(512);
     g_string_append_printf(reply, "{\"alarmId\":%d", alarm_id);
 
     if (subscribe_json)
@@ -341,6 +343,9 @@ alarmAddCalendar(LSHandle *sh, LSMessage *message, void *ctx)
     LSError lserror;
     LSErrorInit(&lserror);
 
+    struct json_object *subscribe_json = NULL;
+    GString *reply = NULL;
+
     object = json_tokener_parse(LSMessageGetPayload(message));
 
     if (!object)
@@ -399,8 +404,7 @@ alarmAddCalendar(LSHandle *sh, LSMessage *message, void *ctx)
     SLEEPDLOG_DEBUG("alarmAddCalendar() : (%s %s %s) at %s %s", serviceName,
                     applicationName, key, cal_date, cal_time);
 
-    struct json_object *subscribe_json =
-        json_object_object_get(object, "subscribe");
+    subscribe_json = json_object_object_get(object, "subscribe");
 
     subscribe = json_object_get_boolean(subscribe_json);
 
@@ -457,7 +461,7 @@ alarmAddCalendar(LSHandle *sh, LSMessage *message, void *ctx)
     /*****************/
 
     /* Send alarm id of sucessful alarm add. */
-    GString *reply = g_string_sized_new(512);
+    reply = g_string_sized_new(512);
     g_string_append_printf(reply, "{\"alarmId\":%d", alarm_id);
 
     if (subscribe_json)
@@ -529,6 +533,9 @@ alarmQuery(LSHandle *sh, LSMessage *message, void *ctx)
 
     object = json_tokener_parse(LSMessageGetPayload(message));
 
+    bool first = true;
+    GSequenceIter *iter = NULL;
+
     if (!object)
     {
         goto malformed_json;
@@ -551,8 +558,7 @@ alarmQuery(LSHandle *sh, LSMessage *message, void *ctx)
         goto cleanup;
     }
 
-    bool first = true;
-    GSequenceIter *iter = g_sequence_get_begin_iter(gAlarmQueue->alarms);
+    iter = g_sequence_get_begin_iter(gAlarmQueue->alarms);
 
     while (!g_sequence_iter_is_end(iter))
     {
@@ -639,6 +645,9 @@ alarmRemove(LSHandle *sh, LSMessage *message, void *ctx)
     bool found = false;
     bool retVal;
 
+    int alarmId = 0;
+    GSequenceIter *iter = NULL;
+
     const char *payload = LSMessageGetPayload(message);
     struct json_object *object = json_tokener_parse(payload);
 
@@ -649,10 +658,10 @@ alarmRemove(LSHandle *sh, LSMessage *message, void *ctx)
 
     SLEEPDLOG_DEBUG("alarmRemove() : %s", LSMessageGetPayload(message));
 
-    int alarmId =
+    alarmId =
         json_object_get_int(json_object_object_get(object, "alarmId"));
 
-    GSequenceIter *iter = g_sequence_get_begin_iter(gAlarmQueue->alarms);
+    iter = g_sequence_get_begin_iter(gAlarmQueue->alarms);
 
     while (!g_sequence_iter_is_end(iter))
     {
@@ -821,14 +830,14 @@ alarm_read_db(void)
             xmlChar *service = xmlGetProp(sub, (const xmlChar *)"serviceName");
             xmlChar *app = xmlGetProp(sub, (const xmlChar *)"applicationName");
 
+            unsigned long expiry_secs = 0;
+            uint32_t alarmId = 0;
+            bool isCalendar = false;
+
             if (!id || !expiry)
             {
                 goto clean_round;
             }
-
-            unsigned long expiry_secs = 0;
-            uint32_t alarmId = 0;
-            bool isCalendar = false;
 
             if (expiry)
             {

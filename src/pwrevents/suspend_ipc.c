@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2019 LG Electronics, Inc.
+// Copyright (c) 2011-2021 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -73,12 +73,12 @@ clientCancelByName(LSHandle *sh, LSMessage *message, void *ctx)
 {
     struct json_object *object = json_tokener_parse(LSMessageGetPayload(message));
 
+    char *clientName = NULL;
+
     if (!object)
     {
         goto out;
     }
-
-    char *clientName = NULL;
 
     if(!get_json_string(object, "clientName", &clientName))
     {
@@ -133,14 +133,14 @@ activityStartCallback(LSHandle *sh, LSMessage *message, void *user_data)
     const char *payload = LSMessageGetPayload(message);
 
     struct json_object *object = json_tokener_parse(payload);
+    char *activity_id = NULL;
+    int duration_ms = -1;
+    bool ret = false;
 
     if (!object)
     {
         goto malformed_json;
     }
-
-    char *activity_id = NULL;
-    int duration_ms = 0;
 
     if(!get_json_string(object, "id", &activity_id))
         goto malformed_json;
@@ -152,7 +152,7 @@ activityStartCallback(LSHandle *sh, LSMessage *message, void *user_data)
         goto malformed_json;
     }
 
-    bool ret = PwrEventActivityStart(activity_id, duration_ms);
+    ret = PwrEventActivityStart(activity_id, duration_ms);
 
     if (!ret)
     {
@@ -204,13 +204,12 @@ activityEndCallback(LSHandle *sh, LSMessage *message, void *user_data)
     const char *payload = LSMessageGetPayload(message);
 
     struct json_object *object = json_tokener_parse(payload);
+    char *activity_id = NULL;
 
     if (!object)
     {
         goto malformed_json;
     }
-
-    char *activity_id = NULL;
 
     if(!get_json_string(object, "id", &activity_id))
         goto malformed_json;
@@ -251,17 +250,21 @@ identifyCallback(LSHandle *sh, LSMessage *message, void *data)
     const char *payload = LSMessageGetPayload(message);
 
     struct json_object *object = json_tokener_parse(payload);
+    const char *applicationName = NULL;
+    const char *clientId = NULL;
+    char *clientName = NULL;
+    char *reply = NULL;
+    struct PwrEventClientInfo *info = NULL;
 
     if (!object)
     {
         goto malformed_json;
     }
 
-    const char *applicationName = LSMessageGetApplicationID(message);
-    const char *clientId = LSMessageGetUniqueToken(message);
+    applicationName = LSMessageGetApplicationID(message);
+    clientId = LSMessageGetUniqueToken(message);
 
     bool subscribe;
-    char *clientName = NULL;
 
     if(!get_json_string(object, "clientName", &clientName))
         goto invalid_syntax;
@@ -283,7 +286,7 @@ identifyCallback(LSHandle *sh, LSMessage *message, void *data)
         goto error;
     }
 
-    struct PwrEventClientInfo *info = PwrEventClientLookup(clientId);
+    info = PwrEventClientLookup(clientId);
 
     if (!info)
     {
@@ -294,7 +297,7 @@ identifyCallback(LSHandle *sh, LSMessage *message, void *data)
     info->clientId = g_strdup(clientId);
     info->applicationName = g_strdup(applicationName);
 
-    char *reply = g_strdup_printf(
+    reply = g_strdup_printf(
                       "{\"subscribed\":true,\"clientId\":\"%s\",\"returnValue\":true}", clientId);
 
     SLEEPDLOG_DEBUG("Pwrevents received identify, reply with %s", reply);
@@ -538,13 +541,13 @@ suspendRequestRegister(LSHandle *sh, LSMessage *message, void *data)
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
 
+    char *clientId = NULL;
+    bool reg = false;
+
     if (!object)
     {
         goto malformed_json;
     }
-
-    char *clientId = NULL;
-    bool reg = false;
 
     if(!get_json_string(object, "clientId", &clientId))
         goto invalid_syntax;
@@ -588,12 +591,14 @@ suspendRequestAck(LSHandle *sh, LSMessage *message, void *data)
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
 
+    struct PwrEventClientInfo *clientInfo = NULL;
+    char *clientId = NULL;
+
     if (!object)
     {
         goto malformed_json;
     }
 
-    char *clientId = NULL;
     bool ack;
 
     if(!get_json_string(object, "clientId", &clientId))
@@ -602,7 +607,7 @@ suspendRequestAck(LSHandle *sh, LSMessage *message, void *data)
     if(!get_json_boolean(object, "ack", &ack))
         goto invalid_syntax;
 
-    struct PwrEventClientInfo *clientInfo = PwrEventClientLookup(clientId);
+    clientInfo = PwrEventClientLookup(clientId);
 
     if (!clientInfo)
     {
@@ -656,13 +661,13 @@ prepareSuspendRegister(LSHandle *sh, LSMessage *message, void *data)
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
 
+    char *clientId = NULL;
+    bool reg = false;
+
     if (!object)
     {
         goto malformed_json;
     }
-
-    char *clientId = NULL;
-    bool reg = false;
 
     if(!get_json_string(object, "clientId", &clientId))
         goto invalid_syntax;
@@ -708,12 +713,14 @@ prepareSuspendAck(LSHandle *sh, LSMessage *message, void *data)
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
 
+    char *clientId = NULL;
+    struct PwrEventClientInfo *clientInfo = NULL;
+
     if (!object)
     {
         goto malformed_json;
     }
 
-    char *clientId = NULL;
     bool ack;
 
     if(!get_json_string(object, "clientId", &clientId))
@@ -722,7 +729,7 @@ prepareSuspendAck(LSHandle *sh, LSMessage *message, void *data)
     if(!get_json_boolean(object, "ack", &ack))
         goto invalid_syntax;
 
-    struct PwrEventClientInfo *clientInfo = PwrEventClientLookup(clientId);
+    clientInfo = PwrEventClientLookup(clientId);
     if (!clientInfo)
     {
         LSMessageReplyCustomError(sh, message, "Client not found");

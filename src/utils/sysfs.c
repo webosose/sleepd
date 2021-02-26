@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2018 LG Electronics, Inc.
+// Copyright (c) 2011-2021 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ SysfsGetString(const char *path, char *ret_string, size_t maxlen)
     }
 
     g_strstrip(contents);
-    g_strlcpy(ret_string, contents, maxlen);
+    (void) g_strlcpy(ret_string, contents, maxlen);
 
     g_free(contents);
 
