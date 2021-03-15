@@ -490,6 +490,8 @@ malformed_json:
     goto cleanup;
 cleanup:
 
+    g_strfreev(cal_date_str);
+
     if (object)
     {
         json_object_put(object);

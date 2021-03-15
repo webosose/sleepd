@@ -1425,7 +1425,7 @@ _alarms_timeout_init(void)
     }
 
     gchar *timeout_db_path = g_path_get_dirname(timeout_db_name);
-    g_mkdir_with_parents(timeout_db_path, S_IRWXU);
+    (void)g_mkdir_with_parents(timeout_db_path, S_IRWXU);
     g_free(timeout_db_path);
 
     retVal = smart_sql_open(timeout_db_name, &timeout_db);
