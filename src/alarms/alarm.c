@@ -336,7 +336,7 @@ alarmAddCalendar(LSHandle *sh, LSMessage *message, void *ctx)
     struct tm gm_time;
     bool subscribe;
     bool retVal = false;
-    gchar **cal_date_str;
+    gchar **cal_date_str = NULL;
 
     time_t alarm_time = 0;
 
@@ -393,6 +393,7 @@ alarmAddCalendar(LSHandle *sh, LSMessage *message, void *ctx)
     day = atoi(cal_date_str[1]);
     year = atoi(cal_date_str[2]);
     g_strfreev(cal_date_str);
+    cal_date_str = NULL;
 
     if (hour < 0 || hour > 24 || min < 0 || min > 59 ||
             sec < 0 || sec > 59 ||
@@ -757,7 +758,7 @@ alarm_free(_Alarm *a)
     {
         LSMessageUnref(a->message);
     }
-
+    g_free(a->key);
     g_free(a);
 }
 
@@ -1107,6 +1108,7 @@ alarm_queue_add(uint32_t id, const char *key, bool calendar_time,
     update_alarms();
     return true;
 error:
+    alarm_free(alarm);
     return false;
 }
 
