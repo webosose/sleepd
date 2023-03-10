@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2021 LG Electronics, Inc.
+// Copyright (c) 2011-2023 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -1210,26 +1210,26 @@ cleanup:
 
 LSMethod shutdown_methods[] =
 {
-    { "initiate", initiateShutdown },
+    { "initiate", initiateShutdown,LUNA_METHOD_FLAG_DEPRECATED },
 
-    { "shutdownApplicationsRegister", shutdownApplicationsRegister },
-    { "shutdownApplicationsAck", shutdownApplicationsAck },
+    { "shutdownApplicationsRegister", shutdownApplicationsRegister,LUNA_METHOD_FLAG_DEPRECATED },
+    { "shutdownApplicationsAck", shutdownApplicationsAck,LUNA_METHOD_FLAG_DEPRECATED },
 
-    { "shutdownServicesRegister", shutdownServicesRegister },
-    { "shutdownServicesAck", shutdownServicesAck },
+    { "shutdownServicesRegister", shutdownServicesRegister,LUNA_METHOD_FLAG_DEPRECATED },
+    { "shutdownServicesAck", shutdownServicesAck,LUNA_METHOD_FLAG_DEPRECATED },
 
-    { "TESTresetShutdownState", TESTresetShutdownState },
+    { "TESTresetShutdownState", TESTresetShutdownState,LUNA_METHOD_FLAG_DEPRECATED },
 
-    { "machineOff", machineOff },
-    { "machineReboot", machineReboot },
+    { "machineOff", machineOff,LUNA_METHOD_FLAG_DEPRECATED },
+    { "machineReboot", machineReboot,LUNA_METHOD_FLAG_DEPRECATED },
 
     { },
 };
 
 LSSignal shutdown_signals[] =
 {
-    { "shutdownApplications" },
-    { "shutdownServices" },
+    { "shutdownApplications",LUNA_METHOD_FLAG_DEPRECATED },
+    { "shutdownServices",LUNA_METHOD_FLAG_DEPRECATED },
     { },
 };
 

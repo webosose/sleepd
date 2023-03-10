@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2021 LG Electronics, Inc.
+// Copyright (c) 2011-2023 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -805,18 +805,18 @@ LSMethod com_palm_suspend_methods[] =
 
     /* suspend methods*/
 
-    { "suspendRequestRegister", suspendRequestRegister },
-    { "prepareSuspendRegister", prepareSuspendRegister },
-    { "suspendRequestAck", suspendRequestAck },
-    { "prepareSuspendAck", prepareSuspendAck },
-    { "forceSuspend", forceSuspendCallback },
-    { "identify", identifyCallback },
-    { "clientCancelByName", clientCancelByName },
+    { "suspendRequestRegister", suspendRequestRegister,LUNA_METHOD_FLAG_DEPRECATED },
+    { "prepareSuspendRegister", prepareSuspendRegister,LUNA_METHOD_FLAG_DEPRECATED },
+    { "suspendRequestAck", suspendRequestAck,LUNA_METHOD_FLAG_DEPRECATED },
+    { "prepareSuspendAck", prepareSuspendAck,LUNA_METHOD_FLAG_DEPRECATED },
+    { "forceSuspend", forceSuspendCallback,LUNA_METHOD_FLAG_DEPRECATED },
+    { "identify", identifyCallback,LUNA_METHOD_FLAG_DEPRECATED },
+    { "clientCancelByName", clientCancelByName,LUNA_METHOD_FLAG_DEPRECATED },
 
-    { "activityStart", activityStartCallback },
-    { "activityEnd", activityEndCallback },
+    { "activityStart", activityStartCallback,LUNA_METHOD_FLAG_DEPRECATED },
+    { "activityEnd", activityEndCallback, LUNA_METHOD_FLAG_DEPRECATED },
 
-    { "TESTSuspend", TESTSuspendCallback },
+    { "TESTSuspend", TESTSuspendCallback,LUNA_METHOD_FLAG_DEPRECATED },
 
     { },
 };
@@ -826,10 +826,10 @@ LSSignal com_palm_suspend_signals[] =
 
     /* Suspend signals */
 
-    { "suspendRequest" },
-    { "prepareSuspend" },
-    { "suspended" },
-    { "resume" },
+    { "suspendRequest",LUNA_METHOD_FLAG_DEPRECATED },
+    { "prepareSuspend",LUNA_METHOD_FLAG_DEPRECATED },
+    { "suspended",LUNA_METHOD_FLAG_DEPRECATED },
+    { "resume",LUNA_METHOD_FLAG_DEPRECATED },
 
     { },
 };
