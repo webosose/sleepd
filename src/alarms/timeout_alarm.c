@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2021 LG Electronics, Inc.
+// Copyright (c) 2011-2023 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -558,24 +558,22 @@ _queue_next_timeout(bool set_callback_fn)
     }
     else
     {
-        rtc_expiry = atol(table[ noCols ]);
-
-        // Callback function is unnecessary, because timer checks alarm time.
-        // For callback function, nyx-modules uses glib watch function.
-        // This makes problem that Luns Service API is blocked.
-        // nyx_system_set_alarm(GetNyxSystemDevice(), to_rtc(rtc_expiry), NULL, NULL);
-        nyx_error_t nyx_error = nyx_system_set_alarm(GetNyxSystemDevice(), rtc_expiry,
-                                set_callback_fn ? _rtc_alarm_fired : NULL,
-                                NULL);
-
-        if (nyx_error != NYX_ERROR_NONE)
+        if(set_callback_fn)
         {
-            // In case we get an error in setting RTC alarm, we just fall through to set
-            // a regular g_timer timeout.
-            SLEEPDLOG_DEBUG("Failed to setup RTC wakeup alarm: %d", nyx_error);
-        }
-        else
-        {
+            rtc_expiry = atol(table[ noCols ]);
+            long wakeInSeconds = rtc_expiry - now;
+
+            if (wakeInSeconds < 0)
+            {
+                wakeInSeconds = 0;
+            }
+            else if(wakeInSeconds > MAX_WAKEUP_SECS)
+            {
+                wakeInSeconds = MAX_WAKEUP_SECS;
+            }
+
+            g_timer_source_set_interval_seconds(sTimerCheck, wakeInSeconds, true);
+
             sqlite3_free_table(table);
             return true;
         }
