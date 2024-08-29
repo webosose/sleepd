@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2023 LG Electronics, Inc.
+// Copyright (c) 2011-2024 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ clientCancelByName(LSHandle *sh, LSMessage *message, void *ctx)
 {
     struct json_object *object = json_tokener_parse(LSMessageGetPayload(message));
 
-    char *clientName = NULL;
+    const char *clientName = NULL;
 
     if (!object)
     {
@@ -133,7 +133,7 @@ activityStartCallback(LSHandle *sh, LSMessage *message, void *user_data)
     const char *payload = LSMessageGetPayload(message);
 
     struct json_object *object = json_tokener_parse(payload);
-    char *activity_id = NULL;
+    const char *activity_id = NULL;
     int duration_ms = -1;
     bool ret = false;
 
@@ -204,7 +204,7 @@ activityEndCallback(LSHandle *sh, LSMessage *message, void *user_data)
     const char *payload = LSMessageGetPayload(message);
 
     struct json_object *object = json_tokener_parse(payload);
-    char *activity_id = NULL;
+    const char *activity_id = NULL;
 
     if (!object)
     {
@@ -252,7 +252,7 @@ identifyCallback(LSHandle *sh, LSMessage *message, void *data)
     struct json_object *object = json_tokener_parse(payload);
     const char *applicationName = NULL;
     const char *clientId = NULL;
-    char *clientName = NULL;
+    const char *clientName = NULL;
     char *reply = NULL;
     struct PwrEventClientInfo *info = NULL;
 
@@ -541,7 +541,7 @@ suspendRequestRegister(LSHandle *sh, LSMessage *message, void *data)
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
 
-    char *clientId = NULL;
+    const char *clientId = NULL;
     bool reg = false;
 
     if (!object)
@@ -592,7 +592,7 @@ suspendRequestAck(LSHandle *sh, LSMessage *message, void *data)
                                      LSMessageGetPayload(message));
 
     struct PwrEventClientInfo *clientInfo = NULL;
-    char *clientId = NULL;
+    const char *clientId = NULL;
 
     if (!object)
     {
@@ -661,7 +661,7 @@ prepareSuspendRegister(LSHandle *sh, LSMessage *message, void *data)
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
 
-    char *clientId = NULL;
+    const char *clientId = NULL;
     bool reg = false;
 
     if (!object)
@@ -713,7 +713,7 @@ prepareSuspendAck(LSHandle *sh, LSMessage *message, void *data)
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
 
-    char *clientId = NULL;
+    const char *clientId = NULL;
     struct PwrEventClientInfo *clientInfo = NULL;
 
     if (!object)

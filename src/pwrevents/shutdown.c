@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2023 LG Electronics, Inc.
+// Copyright (c) 2011-2024 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -901,7 +901,7 @@ shutdownApplicationsAck(LSHandle *sh, LSMessage *message,
 {
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
-    char *clientId = NULL;
+    const char *clientId = NULL;
 
     if (!object)
     {
@@ -953,7 +953,7 @@ shutdownServicesAck(LSHandle *sh, LSMessage *message,
 {
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
-    char *clientId = NULL;
+    const char *clientId = NULL;
 
     if (!object)
     {
@@ -1008,7 +1008,7 @@ shutdownApplicationsRegister(LSHandle *sh, LSMessage *message,
         json_tokener_parse(LSMessageGetPayload(message));
 
     const char *clientId = NULL;
-    char *clientName = NULL;
+    const char *clientName = NULL;
 
     if (!object)
     {
@@ -1071,7 +1071,7 @@ shutdownServicesRegister(LSHandle *sh, LSMessage *message,
     struct json_object_iterator itEnd;
 
     const char *clientId = NULL;
-    char *clientName = NULL;
+    const char *clientName = NULL;
 
     if (!object)
     {
@@ -1140,7 +1140,7 @@ machineOff(LSHandle *sh, LSMessage *message,
 {
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
-    char *reason = NULL;
+    const char *reason = NULL;
 
     if (!object)
     {
@@ -1181,7 +1181,7 @@ machineReboot(LSHandle *sh, LSMessage *message,
 {
     struct json_object *object = json_tokener_parse(
                                      LSMessageGetPayload(message));
-    char *reason = NULL;
+    const char *reason = NULL;
 
     if (!object)
     {
